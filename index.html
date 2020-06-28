@@ -191,7 +191,7 @@
           //     }
           //   });
           let changeButton = document.querySelector("a");
-          map.on("click", "germany", function (e) {
+          changeButton.on("click", "germany", function (e) {
             new mapboxgl.Popup()
               .setLngLat(e.lngLat)
               .setHTML(e.features[0].properties.area)
