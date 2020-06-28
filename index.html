@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+    />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .marker {
+        background-image: url("./images/mapbox-icon.png");
+        background-size: cover;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .mapboxgl-popup {
+        max-width: 200px;
+      }
+
+      .mapboxgl-popup-content {
+        text-align: center;
+        font-family: "Open Sans", sans-serif;
+      }
+      a {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <a href="">Change</a>
+
+    <script>
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoibWNmd2VzaCIsImEiOiJja2J4anB0Mmswb3pwMndtb29rYnZkcnhpIn0.5AAPN4_WcSQMVavea0eWqQ";
+
+      var map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/light-v10",
+        center: [11.020224806180178, 50.983252690673254],
+        zoom: 5,
+      });
+
+      // code from the next step will go here!
+
+      //   axios.get("http://localhost:5501/points").then((response) => {
+      //     var geojson = response.data;
+      //     geojson.features.forEach(function (marker) {
+      //       // create a HTML element for each feature
+      //       var el = document.createElement("div");
+      //       el.className = "marker";
+
+      //       // make a marker for each feature and add to the map
+      //       new mapboxgl.Marker(el)
+      //         .setLngLat(marker.geometry.coordinates)
+      //         .setPopup(
+      //           new mapboxgl.Popup({ offset: 25 }) // add popups
+      //             .setHTML(
+      //               "<h3>" +
+      //                 marker.properties.NAME_1 +
+      //                 "</h3><p>" +
+      //                 marker.properties.NAME_2 +
+      //                 "</p>"
+      //             )
+      //         )
+      //         .addTo(map);
+      //     });
+      //   });
+
+      //states
+      function states() {
+        return axios.get("http://localhost:5501/states").then((response) => {
+          return response.data;
+        });
+      }
+
+      function points() {
+        return axios.get("http://localhost:5501/points").then((response) => {
+          return response.data;
+        });
+      }
+
+      points().then((data) => {
+        map.on("load", function () {
+          map.addSource("points", {
+            type: "geojson",
+            data: data,
+          });
+
+          map.addLayer({
+            id: "points",
+            type: "circle",
+            source: "points",
+          });
+
+          var popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+          });
+
+          map.on("mouseenter", "points", function (e) {
+            // Change the cursor style as a UI indicator.
+            map.getCanvas().style.cursor = "pointer";
+
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var name1 = e.features[0].properties.NAME_1;
+            var name2 = e.features[0].properties.NAME_2;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            // Populate the popup and set its coordinates
+            // based on the feature found.
+            popup
+              .setLngLat(coordinates)
+              .setHTML("<h3>" + name1 + "</h3><p>" + name2 + "</p>")
+              .addTo(map);
+          });
+
+          map.on("mouseleave", "points", function () {
+            map.getCanvas().style.cursor = "";
+            popup.remove();
+          });
+        });
+      });
+
+      //states
+      states().then((data) => {
+        map.on("load", function () {
+          map.addSource("germany", {
+            type: "geojson",
+            data: data,
+          });
+
+          map.addLayer({
+            id: "germany",
+            type: "fill",
+            source: "germany",
+            layout: {},
+            paint: {
+              "fill-color": {
+                type: "identity",
+                property: "color",
+              },
+              "fill-outline-color": "rgba(200, 100, 240, 1)",
+            },
+          });
+
+          //   data.features.forEach((feature) => {
+          //     let color = feature.properties["color"];
+          //     let layerID = "poi" + color;
+
+          //     if (!map.getLayer(layerID)) {
+          //       map.addLayer({
+          //         id: layerID,
+          //         type: "",
+          //       });
+          //     }
+          //   });
+          let changeButton = document.querySelector("a");
+          map.on("click", "germany", function (e) {
+            new mapboxgl.Popup()
+              .setLngLat(e.lngLat)
+              .setHTML(e.features[0].properties.area)
+              .addTo(map);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
