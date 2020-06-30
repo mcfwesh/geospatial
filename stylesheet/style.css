@@ -1,0 +1,104 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('../images/bkgd.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+
+
+
+}
+
+
+
+
+#map {
+    position: absolute;
+    top: 0;
+    right: 10%;
+    left: 10%;
+    bottom: 0;
+    width: 80%;
+    margin-top: 11em;
+    margin-bottom: 10em;
+
+
+}
+
+
+.footer {
+    position: absolute;
+    bottom: 0;
+}
+
+.mapboxgl-popup {
+    max-width: 200px;
+}
+
+.mapboxgl-popup div {
+    border-radius: 10px;
+}
+
+.mapboxgl-popup h3 {
+    border-bottom: 1px solid;
+    padding-bottom: 10px;
+    font-size: 18px;
+}
+
+.mapboxgl-popup-content {
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+}
+
+#menu {
+    background: #fff;
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    left: 10px;
+    border-radius: 3px;
+    width: 120px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: "Open Sans", sans-serif;
+}
+
+#menu a {
+    font-size: 13px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+#menu div {
+    display: block;
+    border-bottom: 1px solid;
+    text-align: center;
+    font-size: 14px;
+    padding: 5px;
+}
+
+#menu a:last-child {
+    border: none;
+}
+
+#menu a:hover {
+    background-color: #f8f8f8;
+    color: #404040;
+}
+
+#menu a.active {
+    background-color: #3887be;
+    color: #ffffff;
+}
+
+#menu a.active:hover {
+    background: #3074a4;
+}
