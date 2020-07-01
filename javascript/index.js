@@ -226,7 +226,7 @@ map.on("load", () => {
         visibility: "none",
         "text-field": "{area}",
         "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 15,
+        "text-size": 10,
       },
       paint: {
         "text-color": "#ffffff",
@@ -235,7 +235,7 @@ map.on("load", () => {
 
     //toggling Points visibliity
     // enumerate ids of the layers
-    let toggleableLayerIds = ["states-area", "states-color", "states-number"];
+    let toggleableLayerIds = ["states-color", "states-area", "states-number"];
 
     // set up the corresponding toggle button for each layer
     for (let i = 0; i < toggleableLayerIds.length; i++) {
